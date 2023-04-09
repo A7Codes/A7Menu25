@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +31,7 @@ import com.a7codes.menu25.Adapters.AdapterClassB;
 import com.a7codes.menu25.Classes.ClassA;
 import com.a7codes.menu25.Classes.ClassB;
 import com.a7codes.menu25.R;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,12 +68,27 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
     //Vars
     Bitmap selectedImage;
     SharedPreferences MenuPrefs;
+
+    //Const 2
     DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("MENU25").child("a7codestest");
     ArrayList<ClassA> itemsA = new ArrayList<>();
     ArrayList<ClassB> itemsB = new ArrayList<>();
     AdapterClassB adapter2;
     GridView grid;
+    EditText IDEt;
+    EditText TitleEt;
+    EditText PriceEt;
+    EditText DescEt;
+    EditText ParentEt;
+    ImageView ImageIV;
+    Button AddBtn;
+    Button EditBtn;
+    Button DeleteBtn;
+    Button UpdateImageBtn;
+    Button DeleteImageBtn;
 
+    ClassA selectedClassAItem;
+    ClassB selectedClassBItem;
 
 
     @Override
@@ -189,7 +206,20 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
         View menuConst = getLayoutInflater().inflate(R.layout.admin_panel_menu, constraintLayout2, false);
         constraintLayout2.addView(menuConst);
         //Set Up Grid
+        //Assigner
         grid = findViewById(R.id.apgridview);
+        IDEt = findViewById(R.id.apidet);
+        TitleEt = findViewById(R.id.aptitleet);
+        PriceEt = findViewById(R.id.appriceet);
+        DescEt = findViewById(R.id.apdescet);
+        ParentEt = findViewById(R.id.apparentet);
+        ImageIV = findViewById(R.id.apimageiv);
+        AddBtn = findViewById(R.id.apaddbtn);
+        EditBtn = findViewById(R.id.apeditbtn);
+        DeleteBtn = findViewById(R.id.apdeletebtn);
+        UpdateImageBtn = findViewById(R.id.apupdateimagebtn);
+        DeleteImageBtn = findViewById(R.id.apdeleteimagebtn);
+
         ReadDB();
         adapter2 = new AdapterClassB(this, itemsB, this);
         grid.setAdapter(adapter2);
@@ -295,7 +325,15 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
 
     @Override
     public void onItemClick(ClassB item) {
-        int itemId = item.getId();
+        selectedClassBItem = item;
+
+        IDEt.setText(String.valueOf(item.getId()));
+        TitleEt.setText(item.getTitle());
+        PriceEt.setText(item.getPrice());
+        DescEt.setText(item.getDesc());
+        ParentEt.setText(String.valueOf(item.getParent()));
+        Glide.with(AdminPanel.this).load(item.getImage()).into(ImageIV);
+
     }
 
 
