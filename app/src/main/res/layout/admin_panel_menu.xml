@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7"
+            android:background="#F44336">
+
+            <GridView
+                android:id="@+id/apgridview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="1dp"
+                android:numColumns="3"
+                android:verticalSpacing="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="#009688">
+
+            <EditText
+                android:id="@+id/apparentet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="parent"
+                app:layout_constraintEnd_toEndOf="@+id/apdescet"
+                app:layout_constraintStart_toStartOf="@+id/apdescet"
+                app:layout_constraintTop_toBottomOf="@+id/apdescet" />
+
+            <EditText
+                android:id="@+id/apdescet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="desc"
+                app:layout_constraintEnd_toEndOf="@+id/appriceet"
+                app:layout_constraintStart_toStartOf="@+id/appriceet"
+                app:layout_constraintTop_toBottomOf="@+id/appriceet" />
+
+            <EditText
+                android:id="@+id/appriceet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="price"
+                app:layout_constraintEnd_toEndOf="@+id/aptitleet"
+                app:layout_constraintStart_toStartOf="@+id/aptitleet"
+                app:layout_constraintTop_toBottomOf="@+id/aptitleet" />
+
+            <EditText
+                android:id="@+id/apidet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="id"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/aptitleet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="title"
+                app:layout_constraintEnd_toEndOf="@+id/apidet"
+                app:layout_constraintStart_toStartOf="@+id/apidet"
+                app:layout_constraintTop_toBottomOf="@+id/apidet" />
+
+            <Button
+                android:id="@+id/apaddbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="10dp"
+                android:text="ADD"
+                app:layout_constraintBottom_toTopOf="@+id/apupdateimagebtn"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/apupdateimagebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="20dp"
+                android:text="Update Image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/apeditbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Edit"
+                app:layout_constraintBottom_toBottomOf="@+id/apdeletebtn"
+                app:layout_constraintEnd_toStartOf="@+id/apdeletebtn"
+                app:layout_constraintStart_toEndOf="@+id/apaddbtn"
+                app:layout_constraintTop_toTopOf="@+id/apaddbtn" />
+
+            <Button
+                android:id="@+id/apdeletebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                android:text="Delete"
+                app:layout_constraintBottom_toTopOf="@+id/apdeleteimagebtn"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/apdeleteimagebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="20dp"
+                android:text="Delete Image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/apimageiv"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/apeditbtn"
+                app:layout_constraintEnd_toEndOf="@+id/apparentet"
+                app:layout_constraintStart_toStartOf="@+id/apparentet"
+                app:layout_constraintTop_toBottomOf="@+id/apparentet"
+                app:srcCompat="@mipmap/logo" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
