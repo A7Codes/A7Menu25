@@ -28,8 +28,11 @@ import com.a7codes.menu25.Adapters.AdapterClassA;
 import com.a7codes.menu25.Adapters.AdapterClassB;
 import com.a7codes.menu25.Classes.ClassA;
 import com.a7codes.menu25.Classes.ClassB;
+import com.a7codes.menu25.MainActivity;
 import com.a7codes.menu25.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,9 +51,11 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
 
     //Vars
     ArrayList<ClassA> itemsA = new ArrayList<>();
+    boolean itemATapped = false;
     ArrayList<ClassB> itemsB = new ArrayList<>();
-    DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("MENU25").child("a7codestest");
-    StorageReference stRef = FirebaseStorage.getInstance().getReference().child("Menu25");
+    ArrayList<ClassB> itemsBFiltered = new ArrayList<>();
+    DatabaseReference dbRef;
+    StorageReference stRef;
     AdapterClassA adapter1;
     AdapterClassB adapter2;
 
@@ -62,6 +67,11 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        //Set DB
+        SharedPreferences appPrefs = this.getSharedPreferences("apPrefs", MODE_PRIVATE);
+        String lic = appPrefs.getString("lic", "");
+        dbRef = FirebaseDatabase.getInstance().getReference("MENU25").child(lic);
+        stRef = FirebaseStorage.getInstance().getReference().child("Menu25").child(lic);
 
         //Basics
         goFullScreen();
@@ -69,11 +79,10 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
         //Assigner
         Assigner();
 
-        //Clicker
-        Clicker();
-
         //Start UI
 
+        //Read Items from DB
+        ReadDB();
 
         //Recycler View
         RecyclerView recyclerView = findViewById(R.id.am_rec);
@@ -83,18 +92,25 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
 
         //Grid view
         GridView grid = findViewById(R.id.am_grid);
-
-        adapter2 = new AdapterClassB(this, itemsB, this);
+        adapter2 = new AdapterClassB(this, itemsBFiltered, this);
         grid.setAdapter(adapter2);
 
-        //Read Items from DB
-        ReadDB();
+        //Clicker
+        Clicker();
 
-        //Set Up From Memory
+        //Set Up From Shared Prefs
+        setUpFromSP();
 
-        //Testing
+
     }
 
+    /* Init */
+    private void setMenuStorageFolder(){
+
+    }
+
+
+    /* Basics */
     private void goFullScreen(){
         //Full Screen
         this.getWindow().getDecorView().setSystemUiVisibility(
@@ -119,6 +135,61 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
                 return false;
             }
         });
+
+        imgLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemATapped = false;
+                itemsA.clear();
+                itemsB.clear();
+                ReadDB();
+                adapter1.notifyDataSetChanged();
+                adapter2.notifyDataSetChanged();
+            }
+        });
+
+        adapter1.setOnItemClickListener(new AdapterClassA.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                itemATapped = true;
+                itemsBFiltered.clear();
+
+                for (ClassB item : itemsB){
+                    if (item.getParent() == position + 1){
+                        itemsBFiltered.add(item);
+                    }
+                }
+                adapter2.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void setUpFromSP(){
+        String Logo = "";
+        String Color1 = "";
+        String Color2 = "";
+
+        /* General Prefs */
+        SharedPreferences GsPrefs = this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+
+        Logo = GsPrefs.getString("Logo", "");
+        Color1 = GsPrefs.getString("Color1", "");
+
+        if (!Logo.equals("")){
+
+            File imgLogoGeneralFile = new File(Environment.getExternalStorageDirectory() + "/DCIM/A7Menu_V25/General/logo.png");
+            if (imgLogoGeneralFile.exists()){
+                Glide.with(Menu.this)
+                        .load(imgLogoGeneralFile)
+                        .into(imgLogo);
+            } else {
+                Glide.with(Menu.this)
+                        .load(Logo)
+                        .into(imgLogo);
+            }
+        }
+        ssl.setBackgroundColor(Color.parseColor(Color1));
+
     }
 
     private void ShowLoginAlert(){
@@ -196,10 +267,18 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
                     }
 
                     itemsB.add(tmpB);
-
                     adapter2.notifyDataSetChanged();
-
                 }
+
+                if (!itemATapped){
+                    itemsBFiltered.clear();
+                    for (ClassB item : itemsB){
+                        itemsBFiltered.add(item);
+                    }
+                    adapter2.notifyDataSetChanged();
+                }
+
+
             }
 
             @Override

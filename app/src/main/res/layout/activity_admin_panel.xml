@@ -49,25 +49,33 @@
             app:srcCompat="@mipmap/logowhite" />
 
         <ImageView
-            android:id="@+id/admin_panel_const_items"
+            android:id="@+id/admin_panel_const_itemsb"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/admin_panel_const_db"
+            android:layout_marginTop="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/admin_panel_const_home"
             app:srcCompat="@drawable/ic_items" />
 
         <ImageView
+            android:id="@+id/admin_panel_const_itemsa"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/admin_panel_const_itemsb"
+            app:srcCompat="@drawable/ic_items" />
+
+        <ImageView
             android:id="@+id/admin_panel_const_db"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginBottom="200dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/admin_panel_const_itemsa"
             app:srcCompat="@drawable/ic_database" />
 
         <ImageView

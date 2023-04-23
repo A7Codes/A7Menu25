@@ -1,6 +1,13 @@
 package com.a7codes.menu25.Adapters;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +22,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.a7codes.menu25.Classes.ClassB;
 import com.a7codes.menu25.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class AdapterClassB extends ArrayAdapter<ClassB> {
@@ -53,7 +62,31 @@ public class AdapterClassB extends ArrayAdapter<ClassB> {
         TextView price = listItemView.findViewById(R.id.am_class_b_row_price);
         title.setText(itemB.getTitle());
         price.setText(itemB.getPrice());
-        Glide.with(context).load(itemB.getImage()).into(img);
+
+        File imgItemMenuFile = new File(Environment.getExternalStorageDirectory() + "/DCIM/A7Menu_V25/Items/" + itemB.getId() + ".png");
+
+        if (imgItemMenuFile.exists()){
+            Glide.with(context)
+                    .load(imgItemMenuFile)
+                    .into(img);
+        } else {
+            Glide.with(context)
+                    .load(itemB.getImage())
+                    .into(img);
+        }
+
+
+
+        /* General Prefs */
+        SharedPreferences GsPrefs = context.getSharedPreferences("gsprefs", MODE_PRIVATE);
+        String Color2 = "";
+        Color2 = GsPrefs.getString("Color2", "");
+
+//        img.setForeground(new ColorDrawable(Color.parseColor(Color2)));
+        img.setForeground(new GradientDrawable(
+                GradientDrawable.Orientation.BOTTOM_TOP,
+                new int[] {Color.parseColor(Color2), Color.TRANSPARENT}));
+
 
         root.setOnClickListener(new View.OnClickListener() {
             @Override

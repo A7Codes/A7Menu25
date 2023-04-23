@@ -18,8 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="7"
-            android:background="#F44336">
+            android:layout_weight="7">
 
             <GridView
                 android:id="@+id/apgridview"
@@ -37,8 +36,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="#009688">
+            android:layout_weight="3">
 
             <EditText
                 android:id="@+id/apparentet"
@@ -46,8 +44,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ems="10"
+                android:hint="parent"
                 android:inputType="textPersonName"
-                android:text="parent"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="@+id/apdescet"
                 app:layout_constraintStart_toStartOf="@+id/apdescet"
                 app:layout_constraintTop_toBottomOf="@+id/apdescet" />
@@ -58,8 +57,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ems="10"
+                android:hint="desc"
                 android:inputType="textPersonName"
-                android:text="desc"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="@+id/appriceet"
                 app:layout_constraintStart_toStartOf="@+id/appriceet"
                 app:layout_constraintTop_toBottomOf="@+id/appriceet" />
@@ -70,8 +70,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ems="10"
+                android:hint="price"
                 android:inputType="textPersonName"
-                android:text="price"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="@+id/aptitleet"
                 app:layout_constraintStart_toStartOf="@+id/aptitleet"
                 app:layout_constraintTop_toBottomOf="@+id/aptitleet" />
@@ -82,8 +83,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:ems="10"
+                android:hint="id"
                 android:inputType="textPersonName"
-                android:text="id"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -94,8 +96,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ems="10"
+                android:hint="title"
                 android:inputType="textPersonName"
-                android:text="title"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="@+id/apidet"
                 app:layout_constraintStart_toStartOf="@+id/apidet"
                 app:layout_constraintTop_toBottomOf="@+id/apidet" />
@@ -124,12 +127,10 @@
                 android:id="@+id/apeditbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:text="Edit"
                 app:layout_constraintBottom_toBottomOf="@+id/apdeletebtn"
                 app:layout_constraintEnd_toStartOf="@+id/apdeletebtn"
-                app:layout_constraintStart_toEndOf="@+id/apaddbtn"
-                app:layout_constraintTop_toTopOf="@+id/apaddbtn" />
+                app:layout_constraintStart_toEndOf="@+id/apaddbtn" />
 
             <Button
                 android:id="@+id/apdeletebtn"

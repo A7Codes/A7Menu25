@@ -53,7 +53,7 @@
                     android:id="@+id/am_logo"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     app:srcCompat="@mipmap/logowhite"
                     tools:srcCompat="@mipmap/logowhite" />
 
@@ -67,7 +67,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="8">
+                    android:layout_weight="7">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/am_rec"

@@ -1,16 +1,23 @@
 package com.a7codes.menu25;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.a7codes.menu25.Activities.Menu;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +34,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    DatabaseReference dbRef0 = FirebaseDatabase.getInstance().getReference("MENU25");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
         //Set Directory
         SetMenuFolder();
         //splash screen
-        Intent intent = new Intent(MainActivity.this, Menu.class);
-        startActivity(intent);
+
 
         //Testing
 //        CheckLic();
@@ -59,50 +66,184 @@ public class MainActivity extends AppCompatActivity {
 
     private void SetSharedPrefs(){
 
-        //Lic shared prefs
-        String licID = "";
-        int dr = 0;
 
-        SharedPreferences LicPrefs = this.getSharedPreferences("licprefs", MODE_PRIVATE);
-//        LicPrefs.edit().putString("licID", licID).apply();
-//        LicPrefs.edit().putInt("dr", dr).apply();
+        SharedPreferences appPrefs = this.getSharedPreferences("apPrefs", MODE_PRIVATE);
+        boolean firstLaunch = false;
+        boolean licValidated = false;
 
-        //General Shared prefs
-        String RN = "";
-        String Logo = "";
-        String Color1 = "";
-        String Color2 = "";
+        licValidated = appPrefs.getBoolean("licValidated", false);
+        firstLaunch = appPrefs.getBoolean("firstLaunch", true);
 
-        SharedPreferences GsPrefs = this.getSharedPreferences("gsprefs", MODE_PRIVATE);
-//        GsPrefs.edit().putString("rn", RN).apply();
-//        GsPrefs.edit().putString("Logo", Logo).apply();
-//        GsPrefs.edit().putString("color1", Color1).apply();
-//        GsPrefs.edit().putString("color2", Color2).apply();
+        if (firstLaunch){
+
+            String Logo = "";
+            String Color1 = "#E6173261";
+            String Color2 = "#E6173261";
+
+            /* General Prefs */
+            SharedPreferences GsPrefs = this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+            GsPrefs.edit().putString("Logo", Logo).apply();
+            GsPrefs.edit().putString("Color1", Color1).apply();
+            GsPrefs.edit().putString("Color2", Color2).apply();
+
+            appPrefs.edit().putBoolean("firstLaunch", false).apply();
+
+
+        }
+
+        if (!licValidated){
+            showLicenseInputDialog();
+        } else {
+            Intent intent = new Intent(MainActivity.this, Menu.class);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(intent);
+                }
+            }, 3000);
+
+        }
+
+
+
     }
 
-    private void CheckLic(){
-        SharedPreferences LicPrefs = this.getSharedPreferences("licprefs", MODE_PRIVATE);
-        String licIDSP = LicPrefs.getString("licID", "error");
-        int drSP = LicPrefs.getInt("dr", 0);
 
-//        Log.d("*******************", "CheckLic: ID " + licIDSP);
-//        Log.d("*******************", "CheckLic: DR " + drSP);
 
-        DatabaseReference dbRefLic = FirebaseDatabase.getInstance().getReference("MENU25").child(licIDSP).child("lic");
-        dbRefLic.addValueEventListener(new ValueEventListener() {
+
+    private void showLicenseInputDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter License");
+
+        // Inflate the layout with EditText
+        final EditText input = new EditText(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        builder.setView(input);
+
+        // Set the positive button to check the license
+        builder.setPositiveButton("Check", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String license = input.getText().toString();
+                if (!TextUtils.isEmpty(license)) {
+                    // Implement your logic to check the license
+                    boolean isLicenseValid = checkLicense(license);
+                    if (isLicenseValid) {
+                        Toast.makeText(getApplicationContext(), "License is valid", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, Menu.class);
+                        SharedPreferences appPrefs = MainActivity.this.getSharedPreferences("apPrefs", MODE_PRIVATE);
+                        appPrefs.edit().putBoolean("licValidated", true).apply();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(intent);
+                            }
+                        }, 3000);
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Restart App please", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please enter a license", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        });
+
+        // Set the negative button to dismiss the dialog
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Show the AlertDialog
+        builder.show();
+    }
+
+    private boolean checkLicense(String license) {
+        dbRef0.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot D0 : snapshot.getChildren()){
+                    if (D0.getKey().equals(license)){
+                        if (D0.getValue().toString().equals("")){
+                            /* Set New GS */
+                            dbRef0.child(license).child("gs").child("color1").setValue("#E6173261");
+                            dbRef0.child(license).child("gs").child("color2").setValue("#E6173261");
+                            dbRef0.child(license).child("gs").child("logo").setValue("");
+                            dbRef0.child(license).child("gs").child("rn").setValue("A7Codes");
 
-                for (DataSnapshot D0: snapshot.getChildren()){
+                            /* Set New Lic */
+                            dbRef0.child(license).child("lic").child("dr").setValue(5);
+                            dbRef0.child(license).child("lic").child("id").setValue(license);
 
+                        } else {
+                            for (DataSnapshot D1: D0.getChildren()){
+                                if (D1.getKey().equals("gs")){
+                                    for (DataSnapshot D2 : D1.getChildren()){
+                                        if (D2.getKey().equals("color1")){
+                                            SharedPreferences GsPrefs = MainActivity.this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+                                            GsPrefs.edit().putString("Color1", D2.getValue().toString()).apply();
+                                        } else if (D2.getKey().equals("color2")){
+                                            SharedPreferences GsPrefs = MainActivity.this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+                                            GsPrefs.edit().putString("Color2", D2.getValue().toString()).apply();
+                                        } else if (D2.getKey().equals("logo")){
+                                            SharedPreferences GsPrefs = MainActivity.this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+                                            GsPrefs.edit().putString("Logo", D2.getValue().toString()).apply();
+                                        } else if (D2.getKey().equals("rn")){
+                                            SharedPreferences GsPrefs = MainActivity.this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+                                            GsPrefs.edit().putString("rn", D2.getValue().toString()).apply();
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                        SharedPreferences appPrefs = MainActivity.this.getSharedPreferences("apPrefs", MODE_PRIVATE);
+                        appPrefs.edit().putString("lic", license).apply();
+
+                    } else {
+
+                    }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
 
+        dbRef0.child(license).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    SharedPreferences appPrefs = MainActivity.this.getSharedPreferences("apPrefs", MODE_PRIVATE);
+                    appPrefs.edit().putBoolean("licValidated", true).apply();
+                } else {
+                    SharedPreferences appPrefs = MainActivity.this.getSharedPreferences("apPrefs", MODE_PRIVATE);
+                    appPrefs.edit().putBoolean("licValidated", false).apply();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        SharedPreferences appPrefs = MainActivity.this.getSharedPreferences("apPrefs", MODE_PRIVATE);
+        return appPrefs.getBoolean("licValidated", false);
     }
+
 
     private void SetMenuFolder(){
         File A7_Menu_V25 = new File(Environment.getExternalStorageDirectory() + "/DCIM/A7Menu_V25");
@@ -124,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         if (!A7_Menu_V25_Items.exists()){
             A7_Menu_V25_Items.mkdir();
         }
-
-        
     }
+
+
 }
