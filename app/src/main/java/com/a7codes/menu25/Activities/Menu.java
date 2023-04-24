@@ -71,6 +71,7 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
         SharedPreferences appPrefs = this.getSharedPreferences("apPrefs", MODE_PRIVATE);
         String lic = appPrefs.getString("lic", "");
         dbRef = FirebaseDatabase.getInstance().getReference("MENU25").child(lic);
+        dbRef.keepSynced(false);
         stRef = FirebaseStorage.getInstance().getReference().child("Menu25").child(lic);
 
         //Basics
@@ -187,6 +188,23 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
                         .load(Logo)
                         .into(imgLogo);
             }
+        } else {
+            dbRef.child("gs").child("logo").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (!snapshot.getValue().toString().equals("")){
+                        Glide.with(Menu.this)
+                                .load(snapshot.getValue().toString())
+                                .into(imgLogo);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
         ssl.setBackgroundColor(Color.parseColor(Color1));
 

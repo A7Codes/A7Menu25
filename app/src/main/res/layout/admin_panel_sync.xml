@@ -7,20 +7,23 @@
 
     <Button
         android:id="@+id/apuploadimgsebtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="28dp"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
         android:text="Upload Images"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/apdownloadimgsebtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
         android:layout_marginTop="20dp"
         android:text="Download Images"
         app:layout_constraintEnd_toEndOf="@+id/apuploadimgsebtn"
+        app:layout_constraintStart_toStartOf="@+id/apuploadimgsebtn"
         app:layout_constraintTop_toBottomOf="@+id/apuploadimgsebtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

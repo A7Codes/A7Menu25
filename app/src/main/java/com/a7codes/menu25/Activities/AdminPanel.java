@@ -342,7 +342,17 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
         File imgLogoGeneralFile = new File(Environment.getExternalStorageDirectory() + "/DCIM/A7Menu_V25/General/logo.png");
         if (imgLogoGeneralFile.exists()){
             imgLogoGeneralFile.delete();
-
+            SharedPreferences GsPrefs = this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+            GsPrefs.edit().putString("Logo", "").apply();
+            StorageReference logoRef = stRef.child("/General").child( "logo.png");
+            logoRef.delete();
+            dbRef.child("gs").child("logo").setValue("");
+        } else {
+            SharedPreferences GsPrefs = this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+            GsPrefs.edit().putString("Logo", "").apply();
+            StorageReference logoRef = stRef.child("/General").child( "logo.png");
+            logoRef.delete();
+            dbRef.child("gs").child("logo").setValue("");
         }
     }
 
@@ -813,7 +823,6 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
                 @Override
                 public void onClick(View view) {
                     UploadImagesTapped();
-                    Log.d("*****///////***********??????????", "onSuccess: Tapped");
                 }
             });
 
@@ -865,26 +874,31 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
                 dbRef.child("menu").child("ClassB").child(String.valueOf(itemsB.get(i).getId())).setValue(itemsB.get(i));
             }
 
+
             /* Upload Logo */
             File imgLogo = new File(Environment.getExternalStorageDirectory() + "/DCIM/A7Menu_V25/General/logo.png");
-            StorageReference logoRef = stRef.child("/General").child( "logo.png");
-            Uri file = Uri.fromFile(imgLogo);
-            UploadTask uploadTask = logoRef.putFile(file);
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    return logoRef.getDownloadUrl();
-                }
-            });
+            if (imgLogo.exists()){
+                StorageReference logoRef = stRef.child("/General").child( "logo.png");
+                Uri file = Uri.fromFile(imgLogo);
+                UploadTask uploadTask = logoRef.putFile(file);
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        return logoRef.getDownloadUrl();
+                    }
+                });
 
-            urlTask.addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    String url = task.getResult().toString();
-                    SharedPreferences GsPrefs = AdminPanel.this.getSharedPreferences("gsprefs", MODE_PRIVATE);
-                    GsPrefs.edit().putString("Logo", url).apply();
-                }
-            });
+                urlTask.addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        String url = task.getResult().toString();
+                        SharedPreferences GsPrefs = AdminPanel.this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+                        GsPrefs.edit().putString("Logo", url).apply();
+                        dbRef.child("gs").child("logo").setValue(url);
+                    }
+                });
+            }
+
 
         }
 

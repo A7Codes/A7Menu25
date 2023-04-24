@@ -11,6 +11,8 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,6 +53,17 @@ public class AdapterClassB extends ArrayAdapter<ClassB> {
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.am_class_b_row, parent, false);
+
+            // Move this initialization to constructor so that its not initalized again and again.
+            Animation anim = AnimationUtils.loadAnimation(context,R.anim.grid_anim);
+
+            // By default all grid items will animate together and will look like the gridview is
+            // animating as a whole. So, experiment with incremental delays as below to get a
+            // wave effect.
+            anim.setStartOffset(position * 500);
+
+            listItemView.setAnimation(anim);
+            anim.start();
         }
 
         ClassB itemB = itemsB.get(position);
@@ -68,10 +81,14 @@ public class AdapterClassB extends ArrayAdapter<ClassB> {
         if (imgItemMenuFile.exists()){
             Glide.with(context)
                     .load(imgItemMenuFile)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(img);
         } else {
             Glide.with(context)
                     .load(itemB.getImage())
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(img);
         }
 

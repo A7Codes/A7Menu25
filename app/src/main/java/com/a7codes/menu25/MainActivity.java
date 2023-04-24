@@ -15,7 +15,10 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         //Set Directory
         SetMenuFolder();
         //splash screen
+        logoAnimation();
 
 
         //Testing
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     startActivity(intent);
+                    finish();
                 }
             }, 3000);
 
@@ -267,5 +272,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    private void logoAnimation(){
+        Animation anim = AnimationUtils.loadAnimation(MainActivity.this,R.anim.splash_anim);
+        ImageView logo = findViewById(R.id.main_logo_img);
+        logo.setAnimation(anim);
+        anim.start();
+    }
 
 }
