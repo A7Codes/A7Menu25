@@ -3,14 +3,19 @@ package com.a7codes.menu25.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,6 +28,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.a7codes.menu25.Adapters.AdapterClassA;
 import com.a7codes.menu25.Adapters.AdapterClassB;
@@ -46,6 +52,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClickListener {
 
@@ -104,12 +112,6 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
 
 
     }
-
-    /* Init */
-    private void setMenuStorageFolder(){
-
-    }
-
 
     /* Basics */
     private void goFullScreen(){
@@ -309,6 +311,58 @@ public class Menu extends AppCompatActivity implements AdapterClassB.OnItemClick
 
     @Override
     public void onItemClick(ClassB item) {
-
+        showItemDetails(item);
     }
+
+    private void showItemDetails(ClassB item){
+        Dialog customDialog = new Dialog(this);
+        customDialog.setContentView(R.layout.item_details_dialog);
+        customDialog.show();
+
+        // Get views from the custom layout
+//        EditText customInput = customDialog.findViewById(R.id.);
+//        Button customButton = customDialog.findViewById(R.id.custom_button);
+
+        TextView title = customDialog.findViewById(R.id.idd_title);
+        TextView price = customDialog.findViewById(R.id.idd_price);
+        TextView desc  = customDialog.findViewById(R.id.idd_desc);
+        ImageView img  = customDialog.findViewById(R.id.idd_img);
+        ConstraintLayout root = customDialog.findViewById(R.id.idd_root);
+
+        title.setText(item.getTitle());
+        price.setText(item.getPrice());
+        desc.setText(item.getDesc());
+
+        RequestOptions requestOptions = new RequestOptions()
+                .transform(new RoundedCornersTransformation(20, 0, RoundedCornersTransformation.CornerType.ALL));
+        Glide.with(Menu.this)
+                .load(item.getImage())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .apply(requestOptions)
+                .into(img);
+
+        // Set Background Color
+        SharedPreferences GsPrefs = Menu.this.getSharedPreferences("gsprefs", MODE_PRIVATE);
+        String Color2 = GsPrefs.getString("Color2", "");
+        int tintColor = Color.parseColor(Color2);
+        Drawable bgTitleRoot = ContextCompat.getDrawable(this, R.drawable.rounded_corners_2).mutate();
+        DrawableCompat.setTint(bgTitleRoot, tintColor);
+        root.setBackground(bgTitleRoot);
+
+
+        // Set a click listener for the button
+//        customButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String inputText = customInput.getText().toString();
+//                // Handle the button click and process the input text
+//                // ...
+//
+//                // Dismiss the Dialog
+//                customDialog.dismiss();
+//            }
+//        });
+    }
+
 }

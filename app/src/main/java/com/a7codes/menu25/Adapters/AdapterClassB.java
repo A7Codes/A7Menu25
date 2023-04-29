@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.a7codes.menu25.Classes.ClassB;
 import com.a7codes.menu25.R;
@@ -70,11 +72,12 @@ public class AdapterClassB extends ArrayAdapter<ClassB> {
         ConstraintLayout root = listItemView.findViewById(R.id.am_class_b_row_root);
         root.setMinHeight(root.getMinWidth());
 
+        ConstraintLayout titleRoot = listItemView.findViewById(R.id.am_class_b_row_titleRoot);
         ImageView img = listItemView.findViewById(R.id.am_class_b_row_img);
         TextView title = listItemView.findViewById(R.id.am_class_b_row_title);
         TextView price = listItemView.findViewById(R.id.am_class_b_row_price);
         title.setText(itemB.getTitle());
-        price.setText(itemB.getPrice());
+        price.setText(formatNumberWithCommas(Integer.parseInt(itemB.getPrice())) + " IQD");
 
         File imgItemMenuFile = new File(Environment.getExternalStorageDirectory() + "/DCIM/A7Menu_V25/Items/" + itemB.getId() + ".png");
 
@@ -92,18 +95,17 @@ public class AdapterClassB extends ArrayAdapter<ClassB> {
                     .into(img);
         }
 
-
-
         /* General Prefs */
         SharedPreferences GsPrefs = context.getSharedPreferences("gsprefs", MODE_PRIVATE);
         String Color2 = "";
         Color2 = GsPrefs.getString("Color2", "");
+        Drawable bgTitleRoot = titleRoot.getBackground();
+        bgTitleRoot = DrawableCompat.wrap(bgTitleRoot);
+        int tintColor = Color.parseColor(Color2);
+        DrawableCompat.setTint(bgTitleRoot, tintColor);
+        titleRoot.setBackground(bgTitleRoot);
 
-//        img.setForeground(new ColorDrawable(Color.parseColor(Color2)));
-        img.setForeground(new GradientDrawable(
-                GradientDrawable.Orientation.BOTTOM_TOP,
-                new int[] {Color.parseColor(Color2), Color.TRANSPARENT}));
-
+        price.setTextColor(tintColor);
 
         root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,5 +117,22 @@ public class AdapterClassB extends ArrayAdapter<ClassB> {
         });
 
         return listItemView;
+    }
+
+    /* Format Price */
+    public static String formatNumberWithCommas(int number) {
+        String numberStr = Integer.toString(number);
+        StringBuilder formattedNumber = new StringBuilder();
+        int count = 0;
+
+        for (int i = numberStr.length() - 1; i >= 0; i--) {
+            count++;
+            formattedNumber.append(numberStr.charAt(i));
+            if (count % 3 == 0 && i != 0) {
+                formattedNumber.append(",");
+            }
+        }
+
+        return formattedNumber.reverse().toString();
     }
 }

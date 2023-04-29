@@ -58,34 +58,33 @@ import java.util.Objects;
 
 public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnItemClickListener{
 
-    //Views
-    ConstraintLayout constraintLayout1;
-    ImageView btnHome;
-    ImageView btnItemsB;
-    ImageView btnItemsA;
-    ImageView btnDatabase;
-    ConstraintLayout constraintLayout2;
 
-    //General Screen
-//Views
+
+    /* Views */
+    //Main
+    ConstraintLayout constraintLayout1;
+    ConstraintLayout constraintLayout2;
+    ImageView btnHome;
+    ImageView btnItemsA;
+    ImageView btnItemsB;
+    ImageView btnDatabase;
+
+    //GS
     ImageView logoImageGeneral;
     Button setLogoBtn;
     Button delLogoBtn;
     ConstraintLayout colorScheme1;
     ConstraintLayout colorScheme2;
 
-    //Vars
-    Bitmap selectedImage;
-    SharedPreferences GsPrefs;
+    //Menu A
+    RecyclerView recA;
+    EditText IDEta;
+    EditText TitleEta;
+    Spinner IconSpA;
+    Button AddA;
+    Button updateA;
 
-    //Const 2
-    DatabaseReference dbRef;
-    StorageReference stRef;
-    ArrayList<ClassA> itemsA = new ArrayList<>();
-    ArrayList<ClassB> itemsB = new ArrayList<>();
-
-
-    AdapterClassB adapter2;
+    //Menu B
     GridView grid;
     EditText IDEt;
     EditText TitleEt;
@@ -99,31 +98,26 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
     Button UpdateImageBtn;
     Button DeleteImageBtn;
 
-    ClassA selectedClassAItem;
-    ClassB selectedClassBItem;
-
-    //Database View
+    //Database
     Button UploadImages;
     Button DownloadImages;
 
-    //Menu A
+    /* Vars */
+    Bitmap selectedImage;
+    SharedPreferences GsPrefs;
+    DatabaseReference dbRef;
+    StorageReference stRef;
+    ArrayList<ClassA> itemsA = new ArrayList<>();
+    ArrayList<ClassB> itemsB = new ArrayList<>();
+    AdapterClassB adapter2;
+    ClassA selectedClassAItem;
+    ClassB selectedClassBItem;
     AdapterClassA adapter1;
-    RecyclerView recA;
     int viewMode = 0;
-
-    EditText IDEta;
-
-    EditText TitleEta;
-
-    Spinner IconSpA;
-
-    Button AddA;
-    Button updateA;
-
     ArrayList<String> ClassAIcons = new ArrayList<>();
     String ClassASelectedIcon;
 
-
+    /* Class Start */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -445,7 +439,6 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
 
     private void setInfo(int pos){
         selectedClassAItem = itemsA.get(pos);
-
         IDEta.setText(String.valueOf(selectedClassAItem.getId()));
         TitleEta.setText(selectedClassAItem.getTitle());
     }
@@ -521,9 +514,6 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
         });
     }
 
-
-
-
     /*
         Menu B Settings View
      */
@@ -588,9 +578,6 @@ public class AdminPanel extends AppCompatActivity implements AdapterClassB.OnIte
                         Refresh();
                     }
                 });
-
-
-
             }
         });
 
